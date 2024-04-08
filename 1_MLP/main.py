@@ -57,10 +57,17 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           shuffle=False)
 
 # ================================================================== #
-#                         2. Initialization                        #
+#                         2. Initialization                          #
 # ================================================================== #
 
+def init_weights(m):
+    if type(m) == nn.Linear:
+        nn.init.xavier_uniform_(m.weight)
+
+
 model = MLP(input_size, hidden_size, num_classes)
+model.apply(init_weights)
+model.to(device)
 # optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 # loss function
@@ -123,7 +130,7 @@ if not disable_training:
     plt.show()
 
 # ================================================================== #
-#                              5. Save                               #
+#                              6. Save                               #
 # ================================================================== #
 if not disable_training:
     torch.save(model, 'MLP.ckpt')
